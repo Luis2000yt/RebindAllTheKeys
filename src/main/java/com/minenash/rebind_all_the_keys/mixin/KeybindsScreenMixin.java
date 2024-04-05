@@ -12,6 +12,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,6 +31,14 @@ public class KeybindsScreenMixin extends GameOptionsScreen {
 
     public KeybindsScreenMixin(Screen parent, GameOptions gameOptions, Text title) {
         super(parent, gameOptions, title);
+    }
+
+    @Redirect(method = "keyPressed", at = @At(value = "INVOKE", ordinal = 0,
+            target = "Lnet/minecraft/client/option/GameOptions;setKeyCode(Lnet/minecraft/client/option/KeyBinding;Lnet/minecraft/client/util/InputUtil$Key;)V"))
+    public void ScreenPrimaryCanNotBeUnbound(GameOptions options, KeyBinding binding, InputUtil.Key key, int keyCode, int scanCode) {
+        if (binding == SCREEN_PRIMARY) key = InputUtil.Type.MOUSE.createFromCode(0);
+        if (binding == SCREEN_SECONDARY) key = InputUtil.Type.MOUSE.createFromCode(1);
+        options.setKeyCode(binding, key);
     }
 
     @Redirect(method = "keyPressed", at = @At(value = "INVOKE", ordinal = 1,

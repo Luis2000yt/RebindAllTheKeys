@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.packet.c2s.play.PlayerInputC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
@@ -21,6 +22,12 @@ import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class RebindAllTheKeys implements ClientModInitializer {
+	public static final Map<Integer,Boolean> IS_MOUSE_DOWN = new HashMap<>(6);
+
+	public static final InputUtil.Key SCROLL_UP = InputUtil.Type.MOUSE.createFromCode(100);
+	public static final InputUtil.Key SCROLL_DOWN = InputUtil.Type.MOUSE.createFromCode(101);
+	public static final InputUtil.Key SCROLL_LEFT = InputUtil.Type.MOUSE.createFromCode(102);
+	public static final InputUtil.Key SCROLL_RIGHT = InputUtil.Type.MOUSE.createFromCode(103);
 
 	public static boolean isAmecsInstalled = false;
 	public static final SimpleOption<Boolean> macCommandToControl = SimpleOption.ofBoolean("rebind_all_the_keys.controls.cmdToCtrl", false);
@@ -62,17 +69,18 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	public static final KeyBinding TOGGLE_AUTO_JUMP = miscKeybind("toggle_auto_jump", GLFW.GLFW_KEY_UNKNOWN);
 	public static final KeyBinding REFRESH_SERVER_LIST = miscKeybind("refresh_server_list", GLFW.GLFW_KEY_F5);
 
-	public static final KeyBinding HOTBAR_NEXT_OVERRIDE = keybind("hotbar_next_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
-	public static final KeyBinding HOTBAR_PREVIOUS_OVERRIDE = keybind("hotbar_previous_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
-	public static final KeyBinding QUICK_MOVE = keybind("quick_move", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding HOTBAR_NEXT = mousebind("hotbar_next", SCROLL_DOWN.getCode(), KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding HOTBAR_PREVIOUS = mousebind("hotbar_previous", SCROLL_UP.getCode(), KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding DROP_STACK_MODIFIER = keybind("drop_stack_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding QUICK_MOVE = keybind("quick_move", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding SCREEN_PRIMARY = mousebind("screen_primary", 0, KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding SCREEN_SECONDARY = mousebind("screen_secondary", 1, KeyBinding.INVENTORY_CATEGORY);
 
 	public static final KeyBinding FLY = keybind("fly", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.MOVEMENT_CATEGORY);
+	public static final KeyBinding DISMOUNT = keybind("dismount", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.MISC_CATEGORY); //TODO: FIX
 
-	public static final InputUtil.Key SCROLL_UP = InputUtil.Type.MOUSE.createFromCode(100);
-	public static final InputUtil.Key SCROLL_DOWN = InputUtil.Type.MOUSE.createFromCode(101);
-	public static final InputUtil.Key SCROLL_LEFT = InputUtil.Type.MOUSE.createFromCode(102);
-	public static final InputUtil.Key SCROLL_RIGHT = InputUtil.Type.MOUSE.createFromCode(103);
+
+
 
 	public static Text gamemodeSwitcherSelectText = null;
 
@@ -89,6 +97,11 @@ public class RebindAllTheKeys implements ClientModInitializer {
 		KeyBindingHelper.registerKeyBinding(binding);
 		return binding;
 	}
+	private static KeyBinding mousebind(String key, int defaultKey, String category) {
+		KeyBinding binding = new KeyBinding("rebind_all_the_keys.keybind." + key, InputUtil.Type.MOUSE, defaultKey, category);
+		KeyBindingHelper.registerKeyBinding(binding);
+		return binding;
+	}
 
 	@Override
 	public void onInitializeClient() {
@@ -100,16 +113,23 @@ public class RebindAllTheKeys implements ClientModInitializer {
 			KeyBinding.setKeyPressed(SCROLL_LEFT, false);
 			KeyBinding.setKeyPressed(SCROLL_RIGHT, false);
 
+			while (DISMOUNT.wasPressed()) {
+				if (client.player.hasVehicle()) {
+					client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, true));
+					client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, client.player.input.sneaking));
+				}
+			}
+
 			while (TOGGLE_AUTO_JUMP.wasPressed()) {
 				boolean value = !client.options.getAutoJump().getValue();
 				client.options.getAutoJump().setValue(value);
 				client.player.sendMessage(Text.translatable("rebind_all_the_keys.keybind.toggle_auto_jump.msg." + value), true);
 			}
 
-			while (HOTBAR_NEXT_OVERRIDE.wasPressed())
+			while (HOTBAR_NEXT.wasPressed())
 				client.player.getInventory().scrollInHotbar(-1);
 
-			while (HOTBAR_PREVIOUS_OVERRIDE.wasPressed())
+			while (HOTBAR_PREVIOUS.wasPressed())
 				client.player.getInventory().scrollInHotbar(1);
 
 			if (isKeybindPressed(DEBUG_KEY) && isKeybindPressed(CYCLE_RENDER_DISTANCE)) {
@@ -124,9 +144,16 @@ public class RebindAllTheKeys implements ClientModInitializer {
 			}
 
 
-
 		});
 
+	}
+
+	public static boolean isNotClick(KeyBinding binding) {
+		return !binding.matchesMouse(0) && !binding.matchesMouse(1);
+	}
+
+	public static boolean isMouse(KeyBinding binding) {
+		return binding.boundKey.type == InputUtil.Type.MOUSE;
 	}
 
 	public static void updateDebugKeybinds() {
@@ -178,6 +205,8 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	}
 
 	public static boolean isKeybindPressed(KeyBinding key) {
+		if (key.boundKey.type == InputUtil.Type.MOUSE)
+			return IS_MOUSE_DOWN.getOrDefault(key.boundKey.getCode(), false);
 		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getKeyCode(key));
 	}
 }

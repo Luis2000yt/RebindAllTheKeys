@@ -25,7 +25,7 @@ public class GameModeSelectionScreenMixin {
         return RebindAllTheKeys.getKeyCode(RebindAllTheKeys.GAMEMODE_SWITCHER);
     }
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE",
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", ordinal = 1,
             target = "Lnet/minecraft/client/gui/DrawContext;drawCenteredTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)V"))
     public Text getGamemodeSwitcherKeyString(Text _in) {
         if (RebindAllTheKeys.gamemodeSwitcherSelectText == null)

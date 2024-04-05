@@ -24,4 +24,9 @@ public class HandledScreenMixin {
         return RebindAllTheKeys.QUICK_MOVE.isDefault() ? HandledScreen.hasShiftDown() : RebindAllTheKeys.isKeybindPressed(RebindAllTheKeys.QUICK_MOVE);
     }
 
+    @Redirect(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;hasControlDown()Z"))
+    public boolean rebindDropStackModifier() {
+        return RebindAllTheKeys.DROP_STACK_MODIFIER.isDefault() ? HandledScreen.hasControlDown() : RebindAllTheKeys.isKeybindPressed(RebindAllTheKeys.DROP_STACK_MODIFIER);
+    }
+
 }

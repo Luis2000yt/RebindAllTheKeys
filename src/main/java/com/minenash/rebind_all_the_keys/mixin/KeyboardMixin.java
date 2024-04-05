@@ -125,4 +125,25 @@ public abstract class KeyboardMixin {
 		return Text.literal(I18n.translate(key).replace("F3 + " + old, RebindAllTheKeys.getDebugKeybindString(binding)));
 	}
 
+	@Inject(method = "onKey", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/util/InputUtil;isKeyPressed(JI)Z"))
+	public void handleScreenPrimarySecondaryWhenMappedToKeys(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
+		int button = SCREEN_PRIMARY.matchesKey(key, scancode) ? 0 : SCREEN_SECONDARY.matchesKey(key, scancode) ? 1 : -1;
+		Screen screen = client.currentScreen;
+
+		if (button == -1 || screen == null)
+			return;
+
+		double d = client.mouse.getX() * (double) client.getWindow().getScaledWidth() / (double) client.getWindow().getWidth();
+		double e = client.mouse.getY() * (double) client.getWindow().getScaledHeight() / (double) client.getWindow().getHeight();
+
+		if (action == GLFW.GLFW_PRESS) {
+			client.mouse.activeButton = button - 10;
+			screen.applyMousePressScrollNarratorDelay();
+			Screen.wrapScreenError(() -> screen.mouseClicked(d, e, button), "screen primary press event handler (rebinded click handler)", screen.getClass().getCanonicalName());
+		} else if (action == GLFW.GLFW_RELEASE) {
+			client.mouse.activeButton = -1;
+			Screen.wrapScreenError(() -> screen.mouseReleased(d, e, button), "screen primary press event handler (rebinded click handler)", screen.getClass().getCanonicalName());
+		}
+	}
+
 }
