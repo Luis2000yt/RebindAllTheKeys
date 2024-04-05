@@ -11,9 +11,6 @@
     "DebugHudMixin",
     "GameModeSelectionScreenMixin",
     "GameOptionsMixin",
-    "InputKeyMixin",
-    "InputUtilKeyMixin",
-    "InputUtilTypeAccessor",
     "KeyBindingMixin",
     "KeybindsScreenMixin",
     "KeyboardInputMixin",
@@ -21,14 +18,12 @@
     "MinecraftClientMixin",
     "MouseMixin",
     "MultiplayerScreenMixin",
-    "ScreenMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "mixins": [
+    "ScreenMixin",
     "GameOptionsAccessor",
     "HandledScreenMixin",
     "LivingEntityMixin"
-  ]
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

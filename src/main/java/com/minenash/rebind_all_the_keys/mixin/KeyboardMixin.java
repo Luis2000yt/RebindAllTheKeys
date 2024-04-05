@@ -16,6 +16,7 @@ import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -50,7 +51,12 @@ public abstract class KeyboardMixin {
 		return RebindAllTheKeys.getKeyCode(INTENTIONAL_CRASH);
 	}
 
-	int key;
+	@Redirect(method = "onKey", at= @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;isKeyPressed(JI)Z"))
+	public boolean fixErrorWhenUnbound(long handle, int code) {
+		return code != -1 && InputUtil.isKeyPressed(handle, code);
+	}
+
+	@Unique int key;
 	@Inject(method = "onKey", at = @At("HEAD"))
 	public void getKey(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
 		this.key = key;
@@ -58,16 +64,12 @@ public abstract class KeyboardMixin {
 
 	@ModifyConstant(method = "onKey", constant = @Constant(intValue = GLFW.GLFW_KEY_ESCAPE /*256*/))
 	public int remapQuitKey(int _key) {
-		if (key == 256)
-			return key;
-		return RebindAllTheKeys.getKeyCode(QUIT_ALIAS);
+		return key == 256 ? key : RebindAllTheKeys.getKeyCode(QUIT_ALIAS);
 	}
 
 	@ModifyConstant(method = "onKey", constant = @Constant(intValue = GLFW.GLFW_KEY_B /*66*/))
 	public int remapToggleNarratorCrashKey(int key) {
-		if (TOGGLE_NARRATOR_OVERRIDE.isUnbound())
-			return key;
-		return RebindAllTheKeys.getKeyCode(TOGGLE_NARRATOR_OVERRIDE);
+		return TOGGLE_NARRATOR_OVERRIDE.isUnbound() ? key : RebindAllTheKeys.getKeyCode(TOGGLE_NARRATOR_OVERRIDE);
 	}
 
 	@Redirect(method = "onKey", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
@@ -77,13 +79,12 @@ public abstract class KeyboardMixin {
 
 	@Redirect(method = "pollDebugCrash", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Keyboard;debugLog(Ljava/lang/String;[Ljava/lang/Object;)V"))
 	public void showActualIntentionalCrashKeybind(Keyboard keyboard, String key, Object[] objects) {
-
 		this.client.inGameHud.getChatHud().addMessage((Text.literal(""))
 				.append((Text.translatable("debug.prefix")).formatted(Formatting.YELLOW, Formatting.BOLD))
 				.append(" ").append(I18n.translate(key).replace("F3 + C", RebindAllTheKeys.getDebugKeybindString(INTENTIONAL_CRASH))));
 	}
 
-	//TODO: Update
+
 	@Inject(method = "processF3", at = @At("HEAD"), cancellable = true)
 	public void showDebugKeybinds(int key, CallbackInfoReturnable<Boolean> info) {
 		if (key != 81)

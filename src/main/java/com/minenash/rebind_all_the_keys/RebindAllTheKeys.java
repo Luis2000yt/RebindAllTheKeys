@@ -78,7 +78,7 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	public static final KeyBinding SCREEN_SECONDARY = mousebind("screen_secondary", 1, KeyBinding.INVENTORY_CATEGORY);
 
 	public static final KeyBinding FLY = keybind("fly", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.MOVEMENT_CATEGORY);
-	public static final KeyBinding DISMOUNT = keybind("dismount", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.MISC_CATEGORY); //TODO: FIX
+	public static final KeyBinding DISMOUNT = keybind("dismount", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.MISC_CATEGORY);
 
 
 
@@ -144,24 +144,24 @@ public class RebindAllTheKeys implements ClientModInitializer {
 
 	public static void updateDebugKeybinds() {
 		DEBUG_REBINDS.clear();
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(RELOAD_CHUNKS).getCode(), GLFW.GLFW_KEY_A);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_HITBOXES).getCode(), GLFW.GLFW_KEY_B);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(COPY_LOCATION).getCode(), GLFW.GLFW_KEY_C);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CLEAR_CHAT).getCode(), GLFW.GLFW_KEY_D);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CYCLE_RENDER_DISTANCE).getCode(), GLFW.GLFW_KEY_F);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_CHUNK_BOUNDARIES).getCode(), GLFW.GLFW_KEY_G);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(ADVANCE_TOOLTIPS).getCode(), GLFW.GLFW_KEY_H);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(COPY_DATA_TO_CLIPBOARD).getCode(), GLFW.GLFW_KEY_I);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(START_STOP_PROFILING).getCode(), GLFW.GLFW_KEY_L);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SWAP_GAMEMODE).getCode(), GLFW.GLFW_KEY_N);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(PAUSE_ON_LOST_FOCUS).getCode(), GLFW.GLFW_KEY_P);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_DEBUG_BINDINGS).getCode(), GLFW.GLFW_KEY_Q);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(RELOAD_RESOURCES).getCode(), GLFW.GLFW_KEY_T);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(GAMEMODE_SWITCHER).getCode(), GLFW.GLFW_KEY_F4);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(DYNAMIC_TEXTURE_DUMP).getCode(), GLFW.GLFW_KEY_S);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_PIE).getCode(), GLFW.GLFW_KEY_1);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_FPS_TPS).getCode(), GLFW.GLFW_KEY_2);
-		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_BANDWIDTH_PING).getCode(), GLFW.GLFW_KEY_3);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(RELOAD_CHUNKS          ).getCode(), GLFW.GLFW_KEY_A);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_HITBOXES          ).getCode(), GLFW.GLFW_KEY_B);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(COPY_LOCATION          ).getCode(), GLFW.GLFW_KEY_C);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CLEAR_CHAT             ).getCode(), GLFW.GLFW_KEY_D);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CYCLE_RENDER_DISTANCE  ).getCode(), GLFW.GLFW_KEY_F);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_CHUNK_BOUNDARIES  ).getCode(), GLFW.GLFW_KEY_G);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(ADVANCE_TOOLTIPS       ).getCode(), GLFW.GLFW_KEY_H);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(COPY_DATA_TO_CLIPBOARD ).getCode(), GLFW.GLFW_KEY_I);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(START_STOP_PROFILING   ).getCode(), GLFW.GLFW_KEY_L);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SWAP_GAMEMODE          ).getCode(), GLFW.GLFW_KEY_N);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(PAUSE_ON_LOST_FOCUS    ).getCode(), GLFW.GLFW_KEY_P);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(SHOW_DEBUG_BINDINGS    ).getCode(), GLFW.GLFW_KEY_Q);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(RELOAD_RESOURCES       ).getCode(), GLFW.GLFW_KEY_T);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(GAMEMODE_SWITCHER      ).getCode(), GLFW.GLFW_KEY_F4);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(DYNAMIC_TEXTURE_DUMP   ).getCode(), GLFW.GLFW_KEY_S);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_PIE              ).getCode(), GLFW.GLFW_KEY_1);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_FPS_TPS          ).getCode(), GLFW.GLFW_KEY_2);
+		DEBUG_REBINDS.put(KeyBindingHelper.getBoundKeyOf(CHART_BANDWIDTH_PING   ).getCode(), GLFW.GLFW_KEY_3);
 
 		if (gamemodeSwitcherSelectText != null)
 			updateGamemodeSwitcherSelectText();
@@ -187,12 +187,12 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	}
 
 	public static int getKeyCode(KeyBinding key) {
-		return Math.abs(KeyBindingHelper.getBoundKeyOf(key).getCode());
+		return KeyBindingHelper.getBoundKeyOf(key).getCode();
 	}
 
 	public static boolean isKeybindPressed(KeyBinding key) {
 		if (key.boundKey.type == InputUtil.Type.MOUSE)
-			return IS_MOUSE_DOWN.getOrDefault(key.boundKey.getCode(), false);
+			return IS_MOUSE_DOWN.getOrDefault(getKeyCode(key), false);
 		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), getKeyCode(key));
 	}
 }

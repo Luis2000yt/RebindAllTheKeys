@@ -33,8 +33,6 @@ public class ControlsOptionsScreenMixin extends GameOptionsScreen{
     public void addMacCommandToControl(CallbackInfo info, int i, int j, int k) {
         this.addDrawableChild(RebindAllTheKeys.doubleTapSprint.createWidget(gameOptions, i, k, 150));
         this.addDrawableChild(RebindAllTheKeys.doubleTapFly.createWidget(gameOptions, j, k, 150));
-//        this.addDrawableChild(RebindAllTheKeys.persistentSprint.createWidget(gameOptions, i, k+24, 150));
-//        this.addDrawableChild(RebindAllTheKeys.persistentSneak.createWidget(gameOptions, j, k+24, 150));
                 if (MinecraftClient.IS_SYSTEM_MAC)
         this.addDrawableChild(RebindAllTheKeys.macCommandToControl.createWidget(gameOptions, i, k+24, 150));
     }

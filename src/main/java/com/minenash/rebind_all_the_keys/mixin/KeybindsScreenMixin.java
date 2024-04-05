@@ -33,14 +33,6 @@ public class KeybindsScreenMixin extends GameOptionsScreen {
         super(parent, gameOptions, title);
     }
 
-    @Redirect(method = "keyPressed", at = @At(value = "INVOKE", ordinal = 1,
-            target = "Lnet/minecraft/client/option/GameOptions;setKeyCode(Lnet/minecraft/client/option/KeyBinding;Lnet/minecraft/client/util/InputUtil$Key;)V"))
-    public void setKeyCode(GameOptions options, KeyBinding binding, InputUtil.Key _key, int keyCode, int scanCode) {
-        //TODO: REMOVE?
-//        boolean setNegative = binding.getCategory().equals("rebind_all_the_keys.keybind_group.debug") && !binding.getTranslationKey().equals("rebind_all_the_keys.keybind.debug_key");
-        options.setKeyCode(binding, InputUtil.fromKeyCode(keyCode, scanCode));
-    }
-
     @Redirect(method = "keyPressed", at = @At(value = "INVOKE", ordinal = 0,
             target = "Lnet/minecraft/client/option/GameOptions;setKeyCode(Lnet/minecraft/client/option/KeyBinding;Lnet/minecraft/client/util/InputUtil$Key;)V"))
     public void ScreenPrimaryCanNotBeUnbound(GameOptions options, KeyBinding binding, InputUtil.Key key, int keyCode, int scanCode) {
