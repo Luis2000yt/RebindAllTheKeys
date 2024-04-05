@@ -19,6 +19,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.CLIENT)
 public class RebindAllTheKeys implements ClientModInitializer {
@@ -113,12 +114,17 @@ public class RebindAllTheKeys implements ClientModInitializer {
 			KeyBinding.setKeyPressed(SCROLL_LEFT, false);
 			KeyBinding.setKeyPressed(SCROLL_RIGHT, false);
 
-			while (DISMOUNT.wasPressed()) {
-				if (client.player.hasVehicle()) {
-					client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, true));
-					client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, client.player.input.sneaking));
-				}
-			}
+//			while (DISMOUNT.wasPressed()) {
+//				if (client.player.hasVehicle()) {
+//					client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, true));
+//
+//					CompletableFuture.runAsync( () -> {
+//						while (client.player.hasVehicle()) {}
+//						client.player.networkHandler.sendPacket(new PlayerInputC2SPacket(client.player.sidewaysSpeed, client.player.forwardSpeed, client.player.input.jumping, client.player.input.jumping));
+//					});
+//
+//				}
+//			}
 
 			while (TOGGLE_AUTO_JUMP.wasPressed()) {
 				boolean value = !client.options.getAutoJump().getValue();
@@ -146,14 +152,6 @@ public class RebindAllTheKeys implements ClientModInitializer {
 
 		});
 
-	}
-
-	public static boolean isNotClick(KeyBinding binding) {
-		return !binding.matchesMouse(0) && !binding.matchesMouse(1);
-	}
-
-	public static boolean isMouse(KeyBinding binding) {
-		return binding.boundKey.type == InputUtil.Type.MOUSE;
 	}
 
 	public static void updateDebugKeybinds() {

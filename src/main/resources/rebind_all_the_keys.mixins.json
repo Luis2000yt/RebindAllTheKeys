@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
     "ControlsListWidgetKeyBindingEntryMixin",
     "ControlsOptionsScreenMixin",
     "DebugHudMixin",
