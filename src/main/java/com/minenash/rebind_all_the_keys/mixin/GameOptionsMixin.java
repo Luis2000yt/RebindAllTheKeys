@@ -31,13 +31,12 @@ public abstract class GameOptionsMixin {
     @Redirect(method = "accept", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;setBoundKey(Lnet/minecraft/client/util/InputUtil$Key;)V"))
     public void fixKeybindsAfterAmecsIsRemoved(KeyBinding keyBinding, InputUtil.Key key) {
 
-        if (!RebindAllTheKeys.isAmecsInstalled && keyBinding.getCategory().equals("rebind_all_the_keys.keybind_group.debug") && !keyBinding.getTranslationKey().equals("rebind_all_the_keys.keybind.debug_key") && key.getCode() > -1) {
+        if (keyBinding.getCategory().equals("rebind_all_the_keys.keybind_group.debug") && (key.getCode() < -1 || (key.getCode() == -1 && key.getCategory() == InputUtil.Type.MOUSE))) {
             String prefix = key.getCategory() == InputUtil.Type.MOUSE ? "key.mouse." : "key.keyboard.";
             keyBinding.setBoundKey(InputUtil.fromTranslationKey(prefix + -key.getCode()));
         }
         else
             keyBinding.setBoundKey(key);
-
     }
 
     @Inject(method = "accept", at = @At("HEAD"))

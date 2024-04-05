@@ -12,11 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InputUtil.class)
 public class InputKeyMixin {
 
-    @Inject(method = "isKeyPressed", at = @At("HEAD"), cancellable = true)
-    private static void silenceError(long handle, int key, CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (key < -1) {
-            callbackInfo.setReturnValue(false);
-            callbackInfo.cancel();
-        }
-    }
+    //TODO: REMOVE?
+//    @Inject(method = "isKeyPressed", at = @At("HEAD"), cancellable = true)
+//    private static void silenceError(long handle, int key, CallbackInfoReturnable<Boolean> callbackInfo) {
+//        if (key < -1) {
+//            callbackInfo.setReturnValue(false);
+//            callbackInfo.cancel();
+//        }
+//    }
 }

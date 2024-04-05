@@ -5,20 +5,21 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.minenash.rebind_all_the_keys.RebindAllTheKeys.QUIT_ALIAS;
+import static com.minenash.rebind_all_the_keys.RebindAllTheKeys.*;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
 
     @Redirect(method = "hasControlDown", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;IS_SYSTEM_MAC:Z"))
     private static boolean swapCommand() {
-        return MinecraftClient.IS_SYSTEM_MAC;
+        return !macCommandToControl.getValue() && MinecraftClient.IS_SYSTEM_MAC;
     }
 
-    int key;
+    @Unique int key;
     @Inject(method = "keyPressed", at = @At("HEAD"))
     public void getKey(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         this.key = keyCode;

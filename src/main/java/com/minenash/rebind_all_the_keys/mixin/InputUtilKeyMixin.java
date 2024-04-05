@@ -18,12 +18,14 @@ public class InputUtilKeyMixin {
 
     @Shadow @Final private InputUtil.Type type;
 
-    @Redirect(method = "method_27444", at = @At(value = "INVOKE", target = "Ljava/util/function/BiFunction;apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private static Object translateNegativeKeys(BiFunction<Integer, String, Text> textTranslator, Object code_in, Object translationKey, InputUtil.Type type) {
-        int code = (int)code_in == -1 ? -1 : Math.abs((int)code_in);
-        InputUtil.Key key = ((InputUtilTypeAccessor)(Object)type).getMap().get(code);
 
-        return textTranslator.apply(code, key == null ? (String)translationKey : key.getTranslationKey());
-    }
+    //TODO: REMOVE?
+//    @Redirect(method = "method_27444", at = @At(value = "INVOKE", target = "Ljava/util/function/BiFunction;apply(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
+//    private static Object translateNegativeKeys(BiFunction<Integer, String, Text> textTranslator, Object code_in, Object translationKey, InputUtil.Type type) {
+//        int code = (int)code_in == -1 ? -1 : Math.abs((int)code_in);
+//        InputUtil.Key key = ((InputUtilTypeAccessor)(Object)type).getMap().get(code);
+//
+//        return textTranslator.apply(code, key == null ? (String)translationKey : key.getTranslationKey());
+//    }
 
 }
