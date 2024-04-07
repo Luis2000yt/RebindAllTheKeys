@@ -120,11 +120,13 @@ public class RebindAllTheKeys implements ClientModInitializer {
 				client.player.sendMessage(Text.translatable("rebind_all_the_keys.keybind.toggle_auto_jump.msg." + value), true);
 			}
 
-			while (HOTBAR_NEXT.wasPressed() && client.player != null)
-				client.player.getInventory().scrollInHotbar(-1);
+			while (HOTBAR_NEXT.wasPressed())
+				if (client.player != null && client.currentScreen == null)
+					client.player.getInventory().scrollInHotbar(-1);
 
-			while (HOTBAR_PREVIOUS.wasPressed() && client.player != null)
-				client.player.getInventory().scrollInHotbar(1);
+			while (HOTBAR_PREVIOUS.wasPressed())
+				if (client.player != null && client.currentScreen == null)
+					client.player.getInventory().scrollInHotbar(1);
 
 			if (isKeybindPressed(DEBUG_KEY) && isKeybindPressed(CYCLE_RENDER_DISTANCE)) {
 				SimpleOption<Integer> option = ((GameOptionsAccessor) client.options).getViewDistance();
