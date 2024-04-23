@@ -12,14 +12,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.packet.c2s.play.PlayerInputC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.CLIENT)
 public class RebindAllTheKeys implements ClientModInitializer {
@@ -70,8 +68,8 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	public static final KeyBinding TOGGLE_AUTO_JUMP = miscKeybind("toggle_auto_jump", GLFW.GLFW_KEY_UNKNOWN);
 	public static final KeyBinding REFRESH_SERVER_LIST = miscKeybind("refresh_server_list", GLFW.GLFW_KEY_F5);
 
-	public static final KeyBinding HOTBAR_NEXT = mousebind("hotbar_next", SCROLL_DOWN.getCode(), KeyBinding.INVENTORY_CATEGORY);
-	public static final KeyBinding HOTBAR_PREVIOUS = mousebind("hotbar_previous", SCROLL_UP.getCode(), KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding HOTBAR_NEXT_OVERRIDE = keybind("hotbar_next_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
+	public static final KeyBinding HOTBAR_PREVIOUS_OVERRIDE = keybind("hotbar_previous_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding DROP_STACK_MODIFIER = keybind("drop_stack_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding QUICK_MOVE = keybind("quick_move", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding SCREEN_PRIMARY = mousebind("screen_primary", 0, KeyBinding.INVENTORY_CATEGORY);
@@ -120,11 +118,11 @@ public class RebindAllTheKeys implements ClientModInitializer {
 				client.player.sendMessage(Text.translatable("rebind_all_the_keys.keybind.toggle_auto_jump.msg." + value), true);
 			}
 
-			while (HOTBAR_NEXT.wasPressed())
+			while (HOTBAR_NEXT_OVERRIDE.wasPressed())
 				if (client.player != null && client.currentScreen == null)
 					client.player.getInventory().scrollInHotbar(-1);
 
-			while (HOTBAR_PREVIOUS.wasPressed())
+			while (HOTBAR_PREVIOUS_OVERRIDE.wasPressed())
 				if (client.player != null && client.currentScreen == null)
 					client.player.getInventory().scrollInHotbar(1);
 
