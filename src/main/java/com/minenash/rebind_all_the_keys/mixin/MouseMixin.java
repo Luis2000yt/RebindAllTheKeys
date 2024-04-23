@@ -38,15 +38,15 @@ public class MouseMixin {
 
     @Redirect(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;scrollInHotbar(D)V"))
     public void blockHotbarScroll(PlayerInventory playerInventory, double scrollAmount) {
-        if (scrollAmount < 0 && HOTBAR_NEXT.isUnbound()
-           || scrollAmount > 0 && HOTBAR_PREVIOUS.isUnbound())
+        if (scrollAmount < 0 && HOTBAR_NEXT_OVERRIDE.isUnbound()
+           || scrollAmount > 0 && HOTBAR_PREVIOUS_OVERRIDE.isUnbound())
             playerInventory.scrollInHotbar(scrollAmount);
     }
 
     @Redirect(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/SpectatorHud;cycleSlot(I)V"))
     public void blockSpectatorHotbarScroll(SpectatorHud instance, int offset) {
-        if (offset > 0 && HOTBAR_NEXT.isUnbound()
-                || offset < 0 && HOTBAR_PREVIOUS.isUnbound())
+        if (offset > 0 && HOTBAR_NEXT_OVERRIDE.isUnbound()
+                || offset < 0 && HOTBAR_PREVIOUS_OVERRIDE.isUnbound())
             MinecraftClient.getInstance().inGameHud.getSpectatorHud().cycleSlot(-offset);
     }
 
