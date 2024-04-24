@@ -80,18 +80,19 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	public static final KeyBinding CHART_FPS_TPS = debugKeybind("tps_fps", GLFW.GLFW_KEY_2);
 	public static final KeyBinding CHART_BANDWIDTH_PING = debugKeybind("bandwidth_ping", GLFW.GLFW_KEY_3);
 
-	public static final KeyBinding QUIT_ALIAS = miscKeybind("quit", GLFW.GLFW_KEY_UNKNOWN);
+	public static final KeyBinding QUIT_ALIAS = keybind("quit", GLFW.GLFW_KEY_UNKNOWN, "key.categories.ui");
+	public static final KeyBinding SCREEN_PRIMARY = mousebind("screen_primary", 0, "key.categories.ui");
+	public static final KeyBinding SCREEN_SECONDARY = mousebind("screen_secondary", 1, "key.categories.ui");
+	public static final KeyBinding REFRESH_SERVER_LIST = keybind("refresh_server_list", GLFW.GLFW_KEY_F5, "key.categories.ui");
+
 	public static final KeyBinding TOGGLE_HUD = miscKeybind("toggle_hud", GLFW.GLFW_KEY_F1);
 	public static final KeyBinding TOGGLE_NARRATOR_OVERRIDE = miscKeybind("toggle_narrator_override", GLFW.GLFW_KEY_UNKNOWN);
 	public static final KeyBinding TOGGLE_AUTO_JUMP = miscKeybind("toggle_auto_jump", GLFW.GLFW_KEY_UNKNOWN);
-	public static final KeyBinding REFRESH_SERVER_LIST = miscKeybind("refresh_server_list", GLFW.GLFW_KEY_F5);
 
 	public static final KeyBinding HOTBAR_NEXT_OVERRIDE = keybind("hotbar_next_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding HOTBAR_PREVIOUS_OVERRIDE = keybind("hotbar_previous_override", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding DROP_STACK_MODIFIER = keybind("drop_stack_modifier", GLFW.GLFW_KEY_LEFT_CONTROL, KeyBinding.INVENTORY_CATEGORY);
 	public static final KeyBinding QUICK_MOVE = keybind("quick_move", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.INVENTORY_CATEGORY);
-	public static final KeyBinding SCREEN_PRIMARY = mousebind("screen_primary", 0, KeyBinding.INVENTORY_CATEGORY);
-	public static final KeyBinding SCREEN_SECONDARY = mousebind("screen_secondary", 1, KeyBinding.INVENTORY_CATEGORY);
 
 	public static final KeyBinding FLY = keybind("fly", GLFW.GLFW_KEY_UNKNOWN, KeyBinding.MOVEMENT_CATEGORY);
 	public static final KeyBinding DISMOUNT = keybind("dismount", GLFW.GLFW_KEY_LEFT_SHIFT, KeyBinding.MISC_CATEGORY);
