@@ -40,13 +40,13 @@ public abstract class GameOptionsMixin {
     }
 
     @Inject(method = "accept", at = @At("HEAD"))
-    public void addMacCommandToControlOption(GameOptions.Visitor visitor, CallbackInfo info) {
+    public void addMoreOptions(GameOptions.Visitor visitor, CallbackInfo info) {
         if (MinecraftClient.IS_SYSTEM_MAC)
             visitor.accept("macCommandToControl", RebindAllTheKeys.macCommandToControl);
         visitor.accept("doubleTapSprint", RebindAllTheKeys.doubleTapSprint);
         visitor.accept("doubleTapFly", RebindAllTheKeys.doubleTapFly);
-        visitor.accept("persistentSprint", RebindAllTheKeys.persistentSprint);
-        visitor.accept("persistentSneak", RebindAllTheKeys.persistentSneak);
+        visitor.accept("expandedSprint", RebindAllTheKeys.expandedSprint);
+        visitor.accept("expandedSneak", RebindAllTheKeys.expandedSneak);
     }
 
 }

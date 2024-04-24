@@ -78,7 +78,7 @@ public class MouseMixin {
             ci.cancel();
     }
 
-    @Inject(method = "method_1602", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "method_55795", at = @At("HEAD"), cancellable = true)
     private void blockDragScreenClick(Screen screen, double d, double e, double f, double g, CallbackInfo ci) {
         if (block(activeButton))
             ci.cancel();
@@ -103,7 +103,7 @@ public class MouseMixin {
         return remap(button);
     }
 
-    @ModifyArg(method = "method_1602", index = 2, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseDragged(DDIDD)Z"))
+    @ModifyArg(method = "method_55795", index = 2, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseDragged(DDIDD)Z"))
     private int remapDragMouseButton(int button) {
         if (button == -10) return 0;
         if (button == - 9) return 1;

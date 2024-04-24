@@ -14,13 +14,16 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.StringIdentifiable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class RebindAllTheKeys implements ClientModInitializer {
+	public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	public static final Map<Integer,Boolean> IS_MOUSE_DOWN = new HashMap<>(6);
 
 	public static final InputUtil.Key SCROLL_UP = InputUtil.Type.MOUSE.createFromCode(100);
@@ -33,8 +36,23 @@ public class RebindAllTheKeys implements ClientModInitializer {
 	public static final SimpleOption<Boolean> doubleTapSprint = SimpleOption.ofBoolean("rebind_all_the_keys.controls.doubleTapSprint", true);
 	public static final SimpleOption<Boolean> doubleTapFly = SimpleOption.ofBoolean("rebind_all_the_keys.controls.doubleTapFly", true);
 
-	public static final SimpleOption<Boolean> persistentSprint = SimpleOption.ofBoolean("rebind_all_the_keys.controls.persistentSprint", true);
-	public static final SimpleOption<Boolean> persistentSneak = SimpleOption.ofBoolean("rebind_all_the_keys.controls.persistentSneak", false);
+	public enum SneakSprintMode implements StringIdentifiable {
+		HOLD("options.key.hold"), PERSISTENT("rebind_all_the_keys.key.persistent"), TOGGLE("options.key.toggle");
+		public final Text text;
+		SneakSprintMode(String k) { text=Text.translatable(k); }
+		@Override public String asString() { return name(); }
+	}
+
+	public static final SimpleOption<SneakSprintMode> expandedSneak = new SimpleOption<>("key.sneak", SimpleOption.emptyTooltip(),
+			(optionText, value) -> value.text,
+			new SimpleOption.PotentialValuesBasedCallbacks<>(List.of(SneakSprintMode.values()), StringIdentifiable.createCodec(SneakSprintMode::values)),
+			SneakSprintMode.HOLD,
+			(value) -> CLIENT.options.getSneakToggled().setValue( value != SneakSprintMode.HOLD ));
+	public static final SimpleOption<SneakSprintMode> expandedSprint = new SimpleOption<>("key.sprint", SimpleOption.emptyTooltip(),
+			(optionText, value) -> value.text,
+			new SimpleOption.PotentialValuesBasedCallbacks<>(List.of(SneakSprintMode.values()), StringIdentifiable.createCodec(SneakSprintMode::values)),
+			SneakSprintMode.PERSISTENT,
+			(value) -> CLIENT.options.getSprintToggled().setValue(value == SneakSprintMode.TOGGLE));
 
 	public static boolean dontDisableSprint = false;
 
@@ -129,7 +147,7 @@ public class RebindAllTheKeys implements ClientModInitializer {
 			if (isKeybindPressed(DEBUG_KEY) && isKeybindPressed(CYCLE_RENDER_DISTANCE)) {
 				SimpleOption<Integer> option = ((GameOptionsAccessor) client.options).getViewDistance();
 				int newValue = option.getValue() + (Screen.hasShiftDown() ? -1 : 1);
-				int max = client.is64Bit() && Runtime.getRuntime().maxMemory() >= 1000000000L ? 32 : 16;
+				int max = Runtime.getRuntime().maxMemory() >= 1_000_000_000L ? 32 : 16;
 				if (newValue < 2) newValue = 2;
 				if (newValue > max) newValue = max;
 

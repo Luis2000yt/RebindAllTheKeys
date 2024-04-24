@@ -29,12 +29,12 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Redirect(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/network/ClientPlayerEntity;setSprinting(Z)V"))
     private void disableDoubleTapSprint(ClientPlayerEntity instance, boolean sprinting) {
         if (RebindAllTheKeys.doubleTapSprint.getValue() || client.options.sprintKey.isPressed())
-            ((ClientPlayerEntity)(Object)this).setSprinting(true);
+            this.setSprinting(true);
     }
 
     @ModifyExpressionValue(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;canSprint()Z"))
     private boolean cancelSprintIfNotPersistent(boolean original) {
-        return (RebindAllTheKeys.dontDisableSprint || RebindAllTheKeys.persistentSprint.getValue() || client.options.sprintKey.isPressed()) && original;
+        return (RebindAllTheKeys.dontDisableSprint || RebindAllTheKeys.expandedSprint.getValue() == RebindAllTheKeys.SneakSprintMode.PERSISTENT || client.options.sprintKey.isPressed()) && original;
     }
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/network/ClientPlayerEntity;setSprinting(Z)V"))

@@ -21,7 +21,7 @@ public class KeyboardInputMixin extends Input {
     private void persistentSneak(boolean slowDown, float slowDownFactor, CallbackInfo ci) {
         boolean moved = pressingForward || pressingBack || pressingLeft || pressingRight;
 
-        if (RebindAllTheKeys.persistentSneak.getValue() && !moved && movedPriorCheck)
+        if (RebindAllTheKeys.expandedSneak.getValue() == RebindAllTheKeys.SneakSprintMode.PERSISTENT && !moved && movedPriorCheck)
             ((StickyKeyBinding)MinecraftClient.getInstance().options.sneakKey).untoggle();
 
         movedPriorCheck = moved;
